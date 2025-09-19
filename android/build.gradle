@@ -22,6 +22,8 @@ rootProject.allprojects {
 apply plugin: 'com.android.library'
 
 android {
+    namespace 'me.wolszon.app_group_directory'
+
     compileSdkVersion 28
 
     defaultConfig {
