@@ -5,29 +5,31 @@ import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-public class AppGroupDirectoryPlugin implements FlutterPlugin, MethodCallHandler {
+/**
+ * 一个空实现的插件，保证能编译但不提供任何功能。
+ */
+public class AppGroupDirectoryPlugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
   private static final String CHANNEL_NAME = "me.wolszon.app_group_directory/channel";
+  private MethodChannel channel;
 
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new AppGroupDirectoryPlugin());
+  @Override
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+    channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
+    channel.setMethodCallHandler(this);
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result) {
+  public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+    // 空实现：直接返回 notImplemented
     result.notImplemented();
   }
 
   @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
-    final MethodChannel channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(new AppGroupDirectoryPlugin());
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    if (channel != null) {
+      channel.setMethodCallHandler(null);
+      channel = null;
+    }
   }
-
-  @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {}
 }
